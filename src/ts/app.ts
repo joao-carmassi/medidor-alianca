@@ -2,6 +2,7 @@ import { ARO_MAX, ARO_MIN, CARD_ASPECT, CARD_WIDTH_MM } from './constants';
 import { getDomElements } from './dom';
 import { aroToDiameterMM, clamp, diameterMMToAro, formatMM } from './math';
 import { loadPxPorMM, savePxPorMMValue } from './storage';
+import { createWhatsappUrl } from './whatsapp';
 import type { AppState, PanelName } from './types';
 
 const {
@@ -201,7 +202,11 @@ function stepRingSlider(delta: number): void {
 }
 
 function updateWhatsappLink(): void {
-  btnWhatsapp.href = '#';
+  btnWhatsapp.href = createWhatsappUrl(
+    `Olá, meu aro é ${state.lastAro} e o diâmetro interno medido foi ${formatMM(
+      state.lastDiameterMM,
+    )}.`,
+  );
 }
 
 cardSlider.addEventListener('input', () => {

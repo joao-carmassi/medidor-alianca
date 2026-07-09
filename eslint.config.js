@@ -12,7 +12,7 @@ const browserGlobals = {
 
 export default [
   {
-    ignores: ['dist/**', '.astro/**'],
+    ignores: ['dist/**', '.astro/**', '**/*.d.ts'],
   },
   ...eslintPluginAstro.configs.recommended,
   {
