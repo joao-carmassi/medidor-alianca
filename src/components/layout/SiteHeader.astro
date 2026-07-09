@@ -1,7 +1,13 @@
+---
+import { withBase } from '../../lib/paths';
+
+const logoSrc = withBase('/assets/danielcarmassilogo.png');
+---
+
 <header class='mb-5 flex w-full max-w-[560px] justify-center sm:mb-10'>
   <img
     class='h-auto w-40 drop-shadow-[0_6px_26px_rgba(212,175,55,.14)] sm:w-48'
-    src='/assets/danielcarmassilogo.png'
+    src={logoSrc}
     alt='Daniel Carmassi — Joalheiro'
   />
 </header>

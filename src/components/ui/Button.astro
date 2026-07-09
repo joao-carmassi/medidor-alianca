@@ -1,4 +1,5 @@
 ---
+import { withBase, withBaseAnchor } from '../../lib/paths';
 import { buttonClasses } from '../../lib/uiClasses';
 
 interface Props {
@@ -23,12 +24,25 @@ const {
   variant = 'primary',
 } = Astro.props;
 
+function resolveHref(value: string): string {
+  if (value.startsWith('#')) {
+    return withBaseAnchor(value);
+  }
+
+  if (value.startsWith('/')) {
+    return withBase(value);
+  }
+
+  return value;
+}
+
 const classes = `${buttonClasses[variant]} ${className}`.trim();
+const resolvedHref = resolveHref(href);
 ---
 
 {
   as === 'a' ? (
-    <a class={classes} href={href} id={id} rel={rel} target={target}>
+    <a class={classes} href={resolvedHref} id={id} rel={rel} target={target}>
       <slot />
     </a>
   ) : (

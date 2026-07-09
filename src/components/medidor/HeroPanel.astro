@@ -1,7 +1,12 @@
 ---
 import Button from '../ui/Button.astro';
 import RequirementItem from './RequirementItem.astro';
-import { displayFont, eyebrowClass, goldGradient, panelClass } from '../../lib/uiClasses';
+import {
+  displayFont,
+  eyebrowClass,
+  goldGradient,
+  panelClass,
+} from '../../lib/uiClasses';
 ---
 
 <section
@@ -13,8 +18,10 @@ import { displayFont, eyebrowClass, goldGradient, panelClass } from '../../lib/u
   <h1
     class={`${displayFont} mb-5 text-5xl font-medium leading-tight text-[#f3efe6] sm:text-6xl`}
   >
-    Descubra
-    <span class={`${goldGradient} bg-clip-text font-medium italic text-transparent`}>
+    Descubra{' '}
+    <span
+      class={`${goldGradient} bg-clip-text font-medium italic text-transparent`}
+    >
       o seu aro
     </span>
   </h1>
@@ -29,7 +36,9 @@ import { displayFont, eyebrowClass, goldGradient, panelClass } from '../../lib/u
     role='note'
     aria-label='O que você vai precisar'
   >
-    <RequirementItem icon='card'>Um cartão de crédito ou débito comum</RequirementItem>
+    <RequirementItem icon='card'
+      >Um cartão de crédito ou débito comum</RequirementItem
+    >
     <RequirementItem icon='ring'>
       Uma aliança ou anel que já sirva no dedo desejado
     </RequirementItem>

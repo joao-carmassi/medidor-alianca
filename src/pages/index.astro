@@ -5,8 +5,11 @@ import CalibrationPanel from '../components/medidor/CalibrationPanel.astro';
 import HeroPanel from '../components/medidor/HeroPanel.astro';
 import MeasurementPanel from '../components/medidor/MeasurementPanel.astro';
 import ResultPanel from '../components/medidor/ResultPanel.astro';
+import { withBase } from '../lib/paths';
 import { uiFont } from '../lib/uiClasses';
 import '../styles/global.css';
+
+const faviconHref = withBase('/assets/favicon.svg');
 ---
 
 <html lang='pt-BR' class='min-h-full bg-[#0a0a09]'>
@@ -22,7 +25,7 @@ import '../styles/global.css';
       content='Descubra o aro da sua aliança em três passos, usando apenas um cartão de crédito e um anel que já sirva. Medidor oficial Daniel Carmassi.'
     />
     <meta name='theme-color' content='#0b0b0b' />
-    <link rel='icon' type='image/svg+xml' href='/assets/favicon.svg' />
+    <link rel='icon' type='image/svg+xml' href={faviconHref} />
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
     <link
