@@ -1,17 +1,29 @@
-import js from '@eslint/js';
 import eslintPluginAstro from 'eslint-plugin-astro';
-import tseslint from 'typescript-eslint';
+
+const browserGlobals = {
+  window: 'readonly',
+  document: 'readonly',
+  localStorage: 'readonly',
+  requestAnimationFrame: 'readonly',
+  setTimeout: 'readonly',
+  clearTimeout: 'readonly',
+};
 
 export default [
-  // add more generic rule sets here, such as:
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
+  {
+    ignores: ['dist/**', '.astro/**'],
+  },
   ...eslintPluginAstro.configs.recommended,
   {
-    files: ['**/*.{js,mjs,cjs,ts,tsx,astro}'],
+    files: ['**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: browserGlobals,
+    },
     rules: {
-      'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
+      'no-undef': 'error',
+      'no-unused-vars': ['error', { args: 'none', caughtErrors: 'none' }],
     },
   },
 ];

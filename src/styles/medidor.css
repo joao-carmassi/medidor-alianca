@@ -1,0 +1,699 @@
+/* =====================================================================
+   DANIEL CARMASSI — Medidor de Aliança
+   Stylesheet
+   ---------------------------------------------------------------------
+   Palette: deep black + gold, editorial serif display type paired with
+   a quiet, precise sans for UI. No frameworks, no build step.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   0. Design tokens
+   --------------------------------------------------------------------- */
+:root{
+  /* Base surfaces */
+  --black:        #0a0a09;
+  --black-soft:   #141210;
+  --black-elev:   #1b1815;
+  --hairline:     rgba(212, 175, 55, 0.22);
+  --hairline-strong: rgba(212, 175, 55, 0.45);
+
+  /* Gold family */
+  --gold-1: #f3dfa4;
+  --gold-2: #d4af37;
+  --gold-3: #c9a24b;
+  --gold-4: #b8860b;
+  --gold-gradient: linear-gradient(135deg, var(--gold-1) 0%, var(--gold-2) 38%, var(--gold-3) 65%, var(--gold-4) 100%);
+  --gold-gradient-soft: linear-gradient(135deg, rgba(243,223,164,.16), rgba(212,175,55,.10) 60%, rgba(184,134,11,.14));
+
+  /* Text */
+  --ink-1: #f3efe6;      /* headline text on black */
+  --ink-2: #d8d2c4;      /* body text on black */
+  --ink-3: #9c9587;      /* muted text on black */
+
+  /* Type */
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-ui: 'Inter', -apple-system, sans-serif;
+
+  /* Rhythm */
+  --radius-s: 6px;
+  --radius-m: 14px;
+  --radius-l: 26px;
+  --ease-out: cubic-bezier(.16,.8,.28,1);
+  --ease-soft: cubic-bezier(.4,0,.2,1);
+}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------
+   1. Reset
+   --------------------------------------------------------------------- */
+*, *::before, *::after{ box-sizing: border-box; }
+html, body{ height: 100%; }
+body{
+  margin: 0;
+  background: var(--black);
+  color: var(--ink-2);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+img{ max-width: 100%; display: block; }
+button{ font: inherit; color: inherit; }
+a{ color: inherit; }
+ol{ margin: 0; padding: 0; list-style: none; }
+h1, h2, h3, p{ margin: 0; }
+::selection{ background: rgba(212,175,55,.35); color: #fff; }
+
+/* ---------------------------------------------------------------------
+   2. Atmosphere — vignette + grain, sits behind all content
+   --------------------------------------------------------------------- */
+.atmosphere{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%, rgba(212,175,55,.10), transparent 60%),
+    radial-gradient(ellipse 70% 50% at 100% 110%, rgba(184,134,11,.08), transparent 60%),
+    var(--black);
+}
+.atmosphere::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: .5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* ---------------------------------------------------------------------
+   3. Shell / layout
+   --------------------------------------------------------------------- */
+.site-shell{
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(18px, 3.2vh, 40px) 20px clamp(16px, 2.6vh, 32px);
+}
+
+.site-header{
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: clamp(16px, 3vh, 48px);
+}
+.site-header__logo{
+  width: clamp(150px, 16vh, 196px);
+  height: auto;
+  opacity: .96;
+  filter: drop-shadow(0 6px 26px rgba(212,175,55,.14));
+}
+
+/* stage-wrap absorve o espaço livre e centraliza o painel ativo na
+   vertical — assim, em telas altas o conteúdo fica no meio, e em telas
+   baixas (notebooks 768p) tudo cabe sem rolagem. */
+.stage-wrap{
+  width: 100%;
+  max-width: 560px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.site-footer{
+  margin-top: 56px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* ---------------------------------------------------------------------
+   4. Panels
+   --------------------------------------------------------------------- */
+.panel{
+  display: none;
+  flex-direction: column;
+}
+.panel.is-active{
+  display: flex;
+  animation: panel-in .6s var(--ease-out) both;
+}
+@keyframes panel-in{
+  from{ opacity: 0; transform: translateY(14px); }
+  to{ opacity: 1; transform: translateY(0); }
+}
+
+.panel--hero{
+  align-items: center;
+  text-align: center;
+  padding-top: clamp(8px, 4vw, 24px);
+}
+
+/* ---------------------------------------------------------------------
+   5. Typography components
+   --------------------------------------------------------------------- */
+.eyebrow{
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--gold-2);
+  margin-bottom: 14px;
+}
+
+.display-title{
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(42px, 9vw, 68px);
+  line-height: 1.06;
+  color: var(--ink-1);
+  margin-bottom: 20px;
+  letter-spacing: .002em;
+}
+.display-title__accent{
+  font-style: italic;
+  font-weight: 500;
+  background: var(--gold-gradient);
+  background-size: 220% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 7s ease-in-out infinite;
+}
+@keyframes shimmer{
+  0%, 100%{ background-position: 0% 50%; }
+  50%{ background-position: 100% 50%; }
+}
+
+.lede{
+  max-width: 42ch;
+  font-size: 17px;
+  color: var(--ink-2);
+  margin-bottom: 30px;
+}
+
+.section-title{
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(30px, 6vw, 40px);
+  color: var(--ink-1);
+  margin-bottom: 12px;
+}
+
+.instruction{
+  font-size: 15px;
+  color: var(--ink-2);
+  max-width: 54ch;
+  margin-bottom: 26px;
+}
+
+/* ---------------------------------------------------------------------
+   6. Requirements list (hero)
+   --------------------------------------------------------------------- */
+.requirements{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+  margin: 4px auto 34px;
+  padding: 18px 22px;
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-m);
+  background: linear-gradient(180deg, rgba(255,255,255,.02), transparent);
+}
+.requirements__item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14.5px;
+  color: var(--ink-2);
+  text-align: left;
+}
+.requirements__icon{
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-strong);
+  color: var(--gold-2);
+}
+
+/* ---------------------------------------------------------------------
+   7. Buttons
+   --------------------------------------------------------------------- */
+.hero-actions{ display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.hero-actions__row{ display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+.hero-actions__note{ font-size: 13px; color: var(--ink-3); }
+
+.btn{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 34px;
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out), border-color .25s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:active{ transform: translateY(1px) scale(.99); }
+
+.btn--primary{
+  color: #17130a;
+  background: var(--gold-gradient);
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  box-shadow: 0 10px 28px -10px rgba(212,175,55,.55);
+}
+.btn--primary::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 20%, rgba(255,255,255,.55) 50%, transparent 80%);
+  background-size: 220% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.btn--primary:hover{ box-shadow: 0 14px 34px -10px rgba(212,175,55,.7); background-position: 100% 0%; }
+.btn--primary:hover::after{ opacity: .5; animation: sheen 1s var(--ease-soft); }
+@keyframes sheen{
+  from{ background-position: 120% 0; }
+  to{ background-position: -20% 0; }
+}
+
+.btn--ghost{
+  color: var(--gold-1);
+  background: transparent;
+  border-color: var(--hairline-strong);
+}
+.btn--ghost:hover{ border-color: var(--gold-2); background: rgba(212,175,55,.06); }
+
+.btn--link{
+  padding: 10px 4px;
+  color: var(--ink-3);
+  background: none;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+  font-size: 13.5px;
+  border-radius: 0;
+}
+.btn--link:hover{ color: var(--gold-2); }
+
+/* ---------------------------------------------------------------------
+   8. Stepper (progress indicator)
+   --------------------------------------------------------------------- */
+.stepper{ margin-bottom: 30px; }
+.stepper ol{ display: flex; align-items: center; gap: 10px; }
+.stepper__item{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-3);
+}
+.stepper__num{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  font-family: var(--font-display);
+  font-size: 14px;
+  color: var(--ink-3);
+  transition: all .3s;
+}
+.stepper__label{
+  font-size: 11px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  display: none;
+}
+.stepper__sep{
+  width: 26px;
+  height: 1px;
+  background: var(--hairline);
+}
+.stepper__item.is-current .stepper__num{
+  border-color: var(--gold-2);
+  color: var(--black);
+  background: var(--gold-gradient);
+  box-shadow: 0 0 0 4px rgba(212,175,55,.14);
+}
+.stepper__item.is-current .stepper__label{ color: var(--gold-2); }
+.stepper__item.is-done .stepper__num{ border-color: var(--gold-3); color: var(--gold-3); }
+
+@media (min-width: 480px){
+  .stepper__label{ display: inline-block; }
+}
+
+/* ---------------------------------------------------------------------
+   9. Measurement stage (shared frame for card + ring)
+   --------------------------------------------------------------------- */
+.stage{
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(170px, 26vh, 220px);
+  margin-bottom: clamp(14px, 2.2vh, 22px);
+  padding: clamp(20px, 3vh, 36px) 20px;
+  border-radius: var(--radius-l);
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(212,175,55,.07), transparent 65%),
+    var(--black-soft);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+}
+/* No passo de medição não desenhamos moldura: o cliente apoia a aliança
+   sobre a tela e só precisa enxergar UM círculo. Sem caixa, sem guias. */
+.stage--ring{
+  min-height: clamp(190px, 30vh, 260px);
+  background: none;
+  border: none;
+  overflow: visible;
+}
+.stage--ring .stage__guides{ display: none; }
+
+.stage__guides{ position: absolute; inset: 18px; pointer-events: none; }
+.stage__guide{ position: absolute; background: repeating-linear-gradient(to bottom, var(--hairline-strong) 0 4px, transparent 4px 9px); }
+.stage__guide--v{ top: 0; bottom: 0; left: 0; width: 1px; }
+.stage__guide--h{ left: 0; right: 0; top: 0; height: 1px; background: repeating-linear-gradient(to right, var(--hairline-strong) 0 4px, transparent 4px 9px); }
+
+/* Card object -------------------------------------------------------- */
+.card-object{
+  position: relative;
+  border-radius: 12px;
+  background: linear-gradient(155deg, #1d1a15, #100e0b 60%, #1b1712);
+  border: 1.5px solid var(--gold-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 18px 40px -20px rgba(0,0,0,.8),
+    0 0 0 1px rgba(212,175,55,.08);
+  transition: width .05s linear, height .05s linear;
+  overflow: hidden;
+}
+.card-object__shine{
+  position: absolute;
+  inset: -40% -10%;
+  background: linear-gradient(115deg, transparent 40%, rgba(212,175,55,.16) 50%, transparent 60%);
+  transform: rotate(-6deg);
+}
+.card-object__chip{
+  position: absolute;
+  left: 9%;
+  top: 20%;
+  width: 17%;
+  aspect-ratio: 4/3;
+  border-radius: 3px;
+  background: linear-gradient(155deg, var(--gold-1), var(--gold-4));
+  opacity: .85;
+}
+.card-object__ghost{
+  position: absolute;
+  right: 8%;
+  bottom: 10%;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  letter-spacing: .18em;
+  color: rgba(212,175,55,.35);
+}
+
+/* Ring object ---------------------------------------------------------*/
+/* Disco dourado CHEIO com uma única borda: existe apenas UMA aresta
+   (a externa = o diâmetro medido). Como box-sizing é border-box, a borda
+   fica dentro da largura, então a aresta externa continua valendo o
+   diâmetro exato. O cliente encaixa esse disco por dentro do furo da
+   aliança — sem risco de confundir aro interno com externo. */
+.ring-object{
+  position: relative;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, var(--gold-1), var(--gold-2) 45%, var(--gold-4) 100%);
+  border: 2px solid var(--gold-1);
+  box-shadow:
+    0 20px 46px -18px rgba(212,175,55,.45),
+    inset 0 0 22px rgba(120,80,0,.35);
+  transition: width .05s linear, height .05s linear;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ring-object__readout{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(20px, 6vw, 30px);
+  color: #1a1305;                 /* escuro para contrastar com o dourado */
+  text-shadow: 0 1px 0 rgba(255,255,255,.25);
+}
+
+/* ---------------------------------------------------------------------
+   10. Controls (sliders + fine-adjust buttons)
+   --------------------------------------------------------------------- */
+.control{ margin-bottom: 8px; }
+.control__label-row{
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.control__label{
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.control__value{
+  font-family: var(--font-ui);
+  font-size: 12.5px;
+  color: var(--gold-2);
+  font-variant-numeric: tabular-nums;
+}
+.control__row{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.stepper-btn{
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline-strong);
+  background: var(--black-elev);
+  color: var(--gold-1);
+  font-size: 19px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color .2s, transform .15s, background .2s;
+}
+.stepper-btn:hover{ border-color: var(--gold-2); background: #221d15; }
+.stepper-btn:active{ transform: scale(.92); }
+
+/* Custom range slider — jewelry-inspired: thin gold rail, diamond thumb */
+.slider{
+  flex: 1;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 24px;
+  background: transparent;
+  cursor: pointer;
+}
+.slider::-webkit-slider-runnable-track{
+  height: 2px;
+  background: linear-gradient(90deg, var(--hairline-strong), var(--hairline));
+  border-radius: 2px;
+}
+.slider::-moz-range-track{
+  height: 2px;
+  background: linear-gradient(90deg, var(--hairline-strong), var(--hairline));
+  border-radius: 2px;
+}
+.slider::-webkit-slider-thumb{
+  -webkit-appearance: none;
+  margin-top: -8px;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--gold-gradient);
+  border: 1px solid #fff3;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 12px -2px rgba(212,175,55,.7);
+  transition: transform .15s var(--ease-out), box-shadow .15s;
+}
+.slider::-moz-range-thumb{
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: var(--gold-gradient);
+  border: 1px solid #fff3;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 12px -2px rgba(212,175,55,.7);
+}
+.slider:active::-webkit-slider-thumb{ transform: rotate(45deg) scale(1.18); }
+.slider:focus-visible::-webkit-slider-thumb{ box-shadow: 0 0 0 5px rgba(212,175,55,.25); }
+
+/* ---------------------------------------------------------------------
+   11. Readouts (step 2)
+   --------------------------------------------------------------------- */
+.readout-row{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 26px;
+}
+.readout{
+  flex: 1;
+  padding: 14px 16px;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--hairline);
+  background: var(--black-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.readout--accent{ border-color: var(--hairline-strong); background: linear-gradient(180deg, rgba(212,175,55,.08), transparent); }
+.readout__label{
+  font-size: 11px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.readout__value{
+  font-family: var(--font-display);
+  font-size: 22px;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+.readout--accent .readout__value{ color: var(--gold-1); }
+
+/* ---------------------------------------------------------------------
+   12. Panel actions (footer buttons of each step)
+   --------------------------------------------------------------------- */
+.panel-actions{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+}
+.panel-actions--result{
+  flex-direction: column;
+  align-items: stretch;
+}
+.panel-actions--result .btn{ width: 100%; }
+
+/* ---------------------------------------------------------------------
+   13. Result panel
+   --------------------------------------------------------------------- */
+.result-hero{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 40px 20px 34px;
+  margin-bottom: 22px;
+  border-radius: var(--radius-l);
+  border: 1px solid var(--hairline-strong);
+  background: radial-gradient(ellipse at 50% 0%, rgba(212,175,55,.10), transparent 70%), var(--black-soft);
+}
+.result-hero__number{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(88px, 26vw, 140px);
+  line-height: .9;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 10px 30px rgba(212,175,55,.25));
+}
+.result-hero__caption{
+  margin-top: 10px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.result-hero__caption strong{ color: var(--gold-1); font-weight: 600; }
+
+.warning-note{
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink-3);
+  padding: 14px 18px;
+  border-left: 2px solid var(--gold-3);
+  background: rgba(212,175,55,.05);
+  border-radius: 0 var(--radius-s) var(--radius-s) 0;
+  margin-bottom: 28px;
+}
+.warning-note strong{ color: var(--gold-2); }
+
+/* ---------------------------------------------------------------------
+   14. Responsive tweaks
+   --------------------------------------------------------------------- */
+@media (min-width: 620px){
+  .panel-actions--result{ flex-direction: row; }
+  .panel-actions--result .btn{ width: auto; flex: 1; }
+}
+
+@media (max-width: 380px){
+  .btn{ padding: 14px 22px; font-size: 13px; }
+  .stage{ padding: 26px 12px; }
+}
+
+/* Telas baixas em desktop/notebook (ex.: 1366x768): compacta o ritmo
+   vertical para o painel inteiro caber na viewport, sem rolagem. */
+@media (min-width: 600px) and (max-height: 860px){
+  .site-header{ margin-bottom: 14px; }
+  .site-header__logo{ width: clamp(120px, 12vh, 160px); }
+
+  .stepper{ margin-bottom: 16px; }
+
+  .display-title{ font-size: clamp(38px, 6.2vh, 58px); margin-bottom: 14px; }
+  .lede{ font-size: 15.5px; margin-bottom: 18px; }
+  .requirements{ margin: 2px auto 20px; padding: 14px 20px; gap: 9px; }
+
+  .section-title{ font-size: clamp(26px, 4.4vh, 36px); margin-bottom: 8px; }
+  .instruction{ font-size: 14px; margin-bottom: 16px; }
+
+  .readout-row{ margin: 12px 0; }
+  .readout{ padding: 11px 14px; }
+
+  .result-hero{ padding: 26px 20px 22px; margin-bottom: 16px; }
+  .warning-note{ margin-bottom: 18px; padding: 12px 16px; }
+}

@@ -1,17 +1,412 @@
 ---
-const teste = 'teste';
+import '../styles/medidor.css';
 ---
 
-<html lang='en'>
+<html lang='pt-BR'>
   <head>
-    <meta charset='utf-8' />
-    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-    <link rel='icon' href='/favicon.ico' />
-    <meta name='viewport' content='width=device-width' />
-    <meta name='generator' content={Astro.generator} />
-    <title>Astro</title>
+    <meta charset='UTF-8' />
+    <meta
+      name='viewport'
+      content='width=device-width, initial-scale=1, viewport-fit=cover'
+    />
+    <title>Medidor de Aliança — Daniel Carmassi</title>
+    <meta
+      name='description'
+      content='Descubra o aro da sua aliança em três passos, usando apenas um cartão de crédito e um anel que já sirva. Medidor oficial Daniel Carmassi.'
+    />
+    <meta name='theme-color' content='#0b0b0b' />
+
+    <link rel='icon' type='image/svg+xml' href='/assets/favicon.svg' />
+
+    <!-- Google Fonts: Cormorant Garamond (display serif) + Inter (UI sans) -->
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      href='https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap'
+      rel='stylesheet'
+    />
   </head>
   <body>
-    <h1>Astro</h1>
+    <!-- Decorative full-page grain/vignette overlay (pure CSS, no assets needed) -->
+    <div class='atmosphere' aria-hidden='true'></div>
+
+    <div class='site-shell'>
+      <!-- ============================================================
+         HEADER — small persistent wordmark, visible on every step
+         ============================================================ -->
+      <header class='site-header'>
+        <img
+          class='site-header__logo'
+          src='/assets/danielcarmassilogo.png'
+          alt='Daniel Carmassi — Joalheiro'
+        />
+      </header>
+
+      <main id='main' class='stage-wrap'>
+        <!-- ============================================================
+           HERO / INTRO
+           ============================================================ -->
+        <section
+          class='panel panel--hero is-active'
+          id='panel-hero'
+          data-panel='hero'
+        >
+          <p class='eyebrow'>Medidor de Aliança</p>
+          <h1 class='display-title'>
+            Descubra <span class='display-title__accent'>o seu aro</span>
+          </h1>
+          <p class='lede'>
+            Um método simples e preciso, feito para ser resolvido em menos de
+            dois minutos, usando apenas um cartão de crédito comum e uma aliança
+            que já sirva em você.
+          </p>
+
+          <div
+            class='requirements'
+            role='note'
+            aria-label='O que você vai precisar'
+          >
+            <div class='requirements__item'>
+              <span class='requirements__icon' aria-hidden='true'>
+                <svg viewBox='0 0 40 26' width='28' height='18'
+                  ><rect
+                    x='1'
+                    y='1'
+                    width='38'
+                    height='24'
+                    rx='4'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='1.4'></rect><rect
+                    x='5'
+                    y='6'
+                    width='9'
+                    height='6'
+                    rx='1.3'
+                    fill='currentColor'></rect></svg
+                >
+              </span>
+              <span>Um cartão de crédito ou débito comum</span>
+            </div>
+            <div class='requirements__item'>
+              <span class='requirements__icon' aria-hidden='true'>
+                <svg viewBox='0 0 40 40' width='20' height='20'
+                  ><circle
+                    cx='20'
+                    cy='20'
+                    r='17'
+                    fill='none'
+                    stroke='currentColor'
+                    stroke-width='3.4'></circle></svg
+                >
+              </span>
+              <span>Uma aliança ou anel que já sirva no dedo desejado</span>
+            </div>
+          </div>
+
+          <!-- Default entry point: no calibration saved yet -->
+          <div class='hero-actions' id='hero-actions-fresh'>
+            <button class='btn btn--primary' type='button' id='btn-start'
+              >Começar</button
+            >
+          </div>
+
+          <!-- Shown instead of the block above when a calibration already exists in localStorage -->
+          <div
+            class='hero-actions hero-actions--returning'
+            id='hero-actions-returning'
+            hidden
+          >
+            <p class='hero-actions__note'>
+              Encontramos uma calibração salva neste dispositivo.
+            </p>
+            <div class='hero-actions__row'>
+              <button class='btn btn--primary' type='button' id='btn-continue'
+                >Continuar medição</button
+              >
+              <button
+                class='btn btn--link'
+                type='button'
+                id='btn-recalibrate-from-hero'>Recalibrar cartão</button
+              >
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+           STEP 1 — CALIBRAR CARTÃO
+           ============================================================ -->
+        <section
+          class='panel'
+          id='panel-step1'
+          data-panel='step1'
+          aria-hidden='true'
+        >
+          <nav class='stepper' aria-label='Progresso'>
+            <ol>
+              <li class='stepper__item is-current'>
+                <span class='stepper__num'>I</span><span class='stepper__label'
+                  >Calibrar</span>
+              </li>
+              <li class='stepper__sep' aria-hidden='true'></li>
+              <li class='stepper__item'>
+                <span class='stepper__num'>II</span><span class='stepper__label'
+                  >Medir</span>
+              </li>
+              <li class='stepper__sep' aria-hidden='true'></li>
+              <li class='stepper__item'>
+                <span class='stepper__num'>III</span><span
+                  class='stepper__label'>Resultado</span>
+              </li>
+            </ol>
+          </nav>
+
+          <p class='eyebrow'>Passo I</p>
+          <h2 class='section-title'>Calibre com um cartão</h2>
+          <p class='instruction'>
+            Encoste um cartão de crédito na tela e ajuste o retângulo abaixo até
+            ele ficar exatamente do mesmo tamanho — alinhe um dos cantos do
+            cartão real com o canto marcado em dourado.
+          </p>
+
+          <div class='stage' id='card-stage-frame'>
+            <div class='stage__guides' aria-hidden='true'>
+              <span class='stage__guide stage__guide--h'></span>
+              <span class='stage__guide stage__guide--v'></span>
+            </div>
+            <div
+              class='card-object'
+              id='card-object'
+              role='img'
+              aria-label='Retângulo de calibração no formato de um cartão de crédito'
+            >
+              <span class='card-object__shine' aria-hidden='true'></span>
+              <span class='card-object__chip' aria-hidden='true'></span>
+              <span class='card-object__ghost'>CARTÃO</span>
+            </div>
+          </div>
+
+          <div class='control' id='card-control'>
+            <div class='control__label-row'>
+              <label class='control__label' for='card-slider'
+                >Tamanho do cartão</label
+              >
+              <span class='control__value' id='card-px-readout'>320 px</span>
+            </div>
+            <div class='control__row'>
+              <button
+                class='stepper-btn'
+                type='button'
+                id='card-dec'
+                aria-label='Diminuir 1 pixel'>&minus;</button
+              >
+              <input
+                class='slider'
+                type='range'
+                id='card-slider'
+                min='120'
+                max='600'
+                step='1'
+                value='320'
+                aria-describedby='card-px-readout'
+              />
+              <button
+                class='stepper-btn'
+                type='button'
+                id='card-inc'
+                aria-label='Aumentar 1 pixel'>&plus;</button
+              >
+            </div>
+          </div>
+
+          <div class='panel-actions'>
+            <button class='btn btn--link' type='button' id='btn-back-to-hero'
+              >&lsaquo; Voltar</button
+            >
+            <button
+              class='btn btn--primary'
+              type='button'
+              id='btn-calibrate-done'>Pronto, está do tamanho</button
+            >
+          </div>
+        </section>
+
+        <!-- ============================================================
+           STEP 2 — MEDIR A ALIANÇA
+           ============================================================ -->
+        <section
+          class='panel'
+          id='panel-step2'
+          data-panel='step2'
+          aria-hidden='true'
+        >
+          <nav class='stepper' aria-label='Progresso'>
+            <ol>
+              <li class='stepper__item is-done'>
+                <span class='stepper__num'>I</span><span class='stepper__label'
+                  >Calibrar</span>
+              </li>
+              <li class='stepper__sep' aria-hidden='true'></li>
+              <li class='stepper__item is-current'>
+                <span class='stepper__num'>II</span><span class='stepper__label'
+                  >Medir</span>
+              </li>
+              <li class='stepper__sep' aria-hidden='true'></li>
+              <li class='stepper__item'>
+                <span class='stepper__num'>III</span><span
+                  class='stepper__label'>Resultado</span>
+              </li>
+            </ol>
+          </nav>
+
+          <p class='eyebrow'>Passo II</p>
+          <h2 class='section-title'>Meça a sua aliança</h2>
+          <p class='instruction'>
+            Apoie uma aliança que já serve na tela e ajuste o disco dourado até
+            ele preencher todo o furo interno da aliança, encostando na borda
+            por dentro.
+          </p>
+
+          <div class='stage stage--ring' id='ring-stage-frame'>
+            <div class='stage__guides' aria-hidden='true'>
+              <span class='stage__guide stage__guide--h'></span>
+              <span class='stage__guide stage__guide--v'></span>
+            </div>
+            <div
+              class='ring-object'
+              id='ring-object'
+              role='img'
+              aria-label='Círculo de medição da aliança'
+            >
+              <span class='ring-object__readout' id='ring-live-aro'>16</span>
+            </div>
+          </div>
+
+          <div class='readout-row'>
+            <div class='readout'>
+              <span class='readout__label'>Diâmetro interno</span>
+              <span class='readout__value' id='diameter-readout'>17,8 mm</span>
+            </div>
+            <div class='readout readout--accent'>
+              <span class='readout__label'>Aro estimado</span>
+              <span class='readout__value' id='aro-readout'>16</span>
+            </div>
+          </div>
+
+          <div class='control' id='ring-control'>
+            <div class='control__label-row'>
+              <label class='control__label' for='ring-slider'
+                >Diâmetro do círculo</label
+              >
+            </div>
+            <div class='control__row'>
+              <button
+                class='stepper-btn'
+                type='button'
+                id='ring-dec'
+                aria-label='Diminuir 1 pixel'>&minus;</button
+              >
+              <input
+                class='slider'
+                type='range'
+                id='ring-slider'
+                min='0'
+                max='1'
+                step='1'
+                value='0'
+              />
+              <button
+                class='stepper-btn'
+                type='button'
+                id='ring-inc'
+                aria-label='Aumentar 1 pixel'>&plus;</button
+              >
+            </div>
+          </div>
+
+          <div class='panel-actions'>
+            <button
+              class='btn btn--link'
+              type='button'
+              id='btn-recalibrate-from-step2'>&lsaquo; Recalibrar cartão</button
+            >
+            <button class='btn btn--primary' type='button' id='btn-see-result'
+              >Ver resultado</button
+            >
+          </div>
+        </section>
+
+        <!-- ============================================================
+           RESULTADO
+           ============================================================ -->
+        <section
+          class='panel'
+          id='panel-result'
+          data-panel='result'
+          aria-hidden='true'
+        >
+          <nav class='stepper' aria-label='Progresso'>
+            <ol>
+              <li class='stepper__item is-done'>
+                <span class='stepper__num'>I</span><span class='stepper__label'
+                  >Calibrar</span>
+              </li>
+              <li class='stepper__sep' aria-hidden='true'></li>
+              <li class='stepper__item is-done'>
+                <span class='stepper__num'>II</span><span class='stepper__label'
+                  >Medir</span>
+              </li>
+              <li class='stepper__sep' aria-hidden='true'></li>
+              <li class='stepper__item is-current'>
+                <span class='stepper__num'>III</span><span
+                  class='stepper__label'>Resultado</span>
+              </li>
+            </ol>
+          </nav>
+
+          <p class='eyebrow'>Resultado</p>
+          <h2 class='section-title'>O seu aro é</h2>
+
+          <div class='result-hero'>
+            <span class='result-hero__number' id='result-aro'>16</span>
+            <span class='result-hero__caption'
+              >Diâmetro interno de <strong id='result-diameter'>17,8 mm</strong
+              ></span
+            >
+          </div>
+
+          <p class='warning-note'>
+            <strong>Atenção:</strong> esta medição possui margem de erro de 1 a 2
+            aros para mais ou para menos. Para uma medida exata e definitiva, recomendamos
+            procurar uma de nossas lojas Daniel Carmassi.
+          </p>
+
+          <div class='panel-actions panel-actions--result'>
+            <!--
+            CTA / WhatsApp link — replace the href="#" below with the real
+            WhatsApp deep link, e.g.:
+            https://wa.me/55XXXXXXXXXXX?text=Ol%C3%A1%2C%20meu%20aro%20%C3%A9%20{ARO}
+            (see README.md for full instructions)
+          -->
+            <a
+              class='btn btn--primary'
+              href='#'
+              id='btn-whatsapp'
+              target='_blank'
+              rel='noopener'>Falar no WhatsApp</a
+            >
+            <button class='btn btn--ghost' type='button' id='btn-remeasure'
+              >Medir de novo</button
+            >
+          </div>
+        </section>
+      </main>
+
+      <footer class='site-footer'>
+        <p>Daniel Carmassi &mdash; Medidor de Aliança</p>
+      </footer>
+    </div>
+
+    <script src='/assets/app.js' defer></script>
   </body>
 </html>
