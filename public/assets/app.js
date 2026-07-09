@@ -126,6 +126,7 @@
         el.removeAttribute("aria-hidden");
         el.classList.add("is-active");
       } else {
+        el.hidden = true;
         el.classList.remove("is-active");
         el.setAttribute("aria-hidden", "true");
       }
