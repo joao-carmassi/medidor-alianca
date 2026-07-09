@@ -14,7 +14,7 @@ const buttonBase =
   'relative inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-transparent px-8 py-4 text-sm font-semibold uppercase text-inherit no-underline transition duration-200 active:translate-y-px active:scale-[.99]';
 
 export const buttonClasses = {
-  primary: `${buttonBase} ${goldGradient} text-[#17130a] shadow-[0_10px_28px_-10px_rgba(212,175,55,.55)] hover:shadow-[0_14px_34px_-10px_rgba(212,175,55,.7)]`,
+  primary: `${buttonBase} ${goldGradient} !text-black shadow-[0_10px_28px_-10px_rgba(212,175,55,.55)] hover:shadow-[0_14px_34px_-10px_rgba(212,175,55,.7)]`,
   ghost: `${buttonBase} border-[#d4af37]/45 bg-transparent text-[#f3dfa4] hover:border-[#d4af37] hover:bg-[#d4af37]/10`,
   link: 'inline-flex cursor-pointer items-center justify-center rounded-none border-0 bg-transparent px-1 py-2 text-[13.5px] font-medium text-[#9c9587] transition hover:text-[#d4af37]',
 } as const;
