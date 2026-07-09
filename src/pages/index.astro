@@ -9,7 +9,11 @@ import { withBase } from '../lib/paths';
 import { uiFont } from '../lib/uiClasses';
 import '../styles/global.css';
 
-const faviconHref = withBase('/assets/favicon.svg');
+const faviconPngHref = withBase('/favicon-96x96.png');
+const faviconSvgHref = withBase('/favicon.svg');
+const shortcutIconHref = withBase('/favicon.ico');
+const appleTouchIconHref = withBase('/apple-touch-icon.png');
+const manifestHref = withBase('/site.webmanifest');
 ---
 
 <html lang='pt-BR' class='min-h-full bg-[#0a0a09]'>
@@ -25,7 +29,11 @@ const faviconHref = withBase('/assets/favicon.svg');
       content='Descubra o aro da sua aliança em três passos, usando apenas um cartão de crédito e um anel que já sirva. Medidor oficial Daniel Carmassi.'
     />
     <meta name='theme-color' content='#0b0b0b' />
-    <link rel='icon' type='image/svg+xml' href={faviconHref} />
+    <link rel='icon' type='image/png' href={faviconPngHref} sizes='96x96' />
+    <link rel='icon' type='image/svg+xml' href={faviconSvgHref} />
+    <link rel='shortcut icon' href={shortcutIconHref} />
+    <link rel='apple-touch-icon' sizes='180x180' href={appleTouchIconHref} />
+    <link rel='manifest' href={manifestHref} />
     <link rel='preconnect' href='https://fonts.googleapis.com' />
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
     <link
@@ -41,7 +49,10 @@ const faviconHref = withBase('/assets/favicon.svg');
     >
       <SiteHeader />
 
-      <main id='main' class='flex w-full max-w-[560px] flex-1 flex-col justify-center'>
+      <main
+        id='main'
+        class='flex w-full max-w-[560px] flex-1 flex-col justify-center'
+      >
         <HeroPanel />
         <CalibrationPanel />
         <MeasurementPanel />
