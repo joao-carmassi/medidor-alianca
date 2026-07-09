@@ -1,0 +1,41 @@
+---
+import { stepperClasses } from '../../lib/uiClasses';
+
+interface Props {
+  current: 1 | 2 | 3;
+}
+
+const { current } = Astro.props;
+const steps = [
+  { number: 'I', label: 'Calibrar' },
+  { number: 'II', label: 'Medir' },
+  { number: 'III', label: 'Resultado' },
+] as const;
+
+function getNumberClass(position: number): string {
+  if (position < current) return stepperClasses.doneNumber;
+  if (position === current) return stepperClasses.currentNumber;
+  return stepperClasses.number;
+}
+---
+
+<nav class='mb-7' aria-label='Progresso'>
+  <ol class='flex items-center gap-2.5'>
+    {
+      steps.map((step, index) => {
+        const position = (index + 1) as 1 | 2 | 3;
+        return (
+          <>
+            <li class={stepperClasses.item}>
+              <span class={getNumberClass(position)}>{step.number}</span>
+              <span class={stepperClasses.label}>{step.label}</span>
+            </li>
+            {position < 3 ? (
+              <li class={stepperClasses.separator} aria-hidden='true' />
+            ) : null}
+          </>
+        );
+      })
+    }
+  </ol>
+</nav>

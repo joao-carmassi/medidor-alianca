@@ -1,0 +1,57 @@
+---
+import Button from '../ui/Button.astro';
+import RequirementItem from './RequirementItem.astro';
+import { displayFont, eyebrowClass, goldGradient, panelClass } from '../../lib/uiClasses';
+---
+
+<section
+  class={`${panelClass} items-center pt-2 text-center`}
+  id='panel-hero'
+  data-panel='hero'
+>
+  <p class={eyebrowClass}>Medidor de Aliança</p>
+  <h1
+    class={`${displayFont} mb-5 text-5xl font-medium leading-tight text-[#f3efe6] sm:text-6xl`}
+  >
+    Descubra
+    <span class={`${goldGradient} bg-clip-text font-medium italic text-transparent`}>
+      o seu aro
+    </span>
+  </h1>
+  <p class='mb-7 max-w-[42ch] text-[17px] leading-relaxed text-[#d8d2c4]'>
+    Um método simples e preciso, feito para ser resolvido em menos de dois
+    minutos, usando apenas um cartão de crédito comum e uma aliança que já sirva
+    em você.
+  </p>
+
+  <div
+    class='mx-auto mb-8 flex flex-col items-start gap-3 rounded-[14px] border border-[#d4af37]/20 bg-white/[.02] px-5 py-4'
+    role='note'
+    aria-label='O que você vai precisar'
+  >
+    <RequirementItem icon='card'>Um cartão de crédito ou débito comum</RequirementItem>
+    <RequirementItem icon='ring'>
+      Uma aliança ou anel que já sirva no dedo desejado
+    </RequirementItem>
+  </div>
+
+  <div class='flex flex-col items-center gap-3.5' id='hero-actions-fresh'>
+    <Button id='btn-start'>Começar</Button>
+  </div>
+
+  <div
+    class='flex flex-col items-center gap-3.5'
+    id='hero-actions-returning'
+    hidden
+  >
+    <p class='text-sm text-[#9c9587]'>
+      Encontramos uma calibração salva neste dispositivo.
+    </p>
+    <div class='flex flex-wrap justify-center gap-3.5'>
+      <Button id='btn-continue'>Continuar medição</Button>
+      <Button variant='link' id='btn-recalibrate-from-hero'>
+        Recalibrar cartão
+      </Button>
+    </div>
+  </div>
+</section>

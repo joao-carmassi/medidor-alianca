@@ -1,0 +1,56 @@
+---
+import Button from '../ui/Button.astro';
+import Readout from '../ui/Readout.astro';
+import SliderControl from '../ui/SliderControl.astro';
+import RingMeasurementStage from './RingMeasurementStage.astro';
+import Stepper from './Stepper.astro';
+import {
+  eyebrowClass,
+  instructionClass,
+  panelClass,
+  sectionTitleClass,
+} from '../../lib/uiClasses';
+---
+
+<section
+  class={panelClass}
+  id='panel-step2'
+  data-panel='step2'
+  aria-hidden='true'
+  hidden
+>
+  <Stepper current={2} />
+
+  <p class={eyebrowClass}>Passo II</p>
+  <h2 class={sectionTitleClass}>Meça a sua aliança</h2>
+  <p class={instructionClass}>
+    Apoie uma aliança que já serve na tela e ajuste o disco dourado até ele
+    preencher todo o furo interno da aliança, encostando na borda por dentro.
+  </p>
+
+  <RingMeasurementStage />
+
+  <div class='mb-6 flex gap-3'>
+    <Readout id='diameter-readout' label='Diâmetro interno' value='17,8 mm' />
+    <Readout id='aro-readout' label='Aro estimado' value='16' accent />
+  </div>
+
+  <div id='ring-control'>
+    <SliderControl
+      decrementId='ring-dec'
+      incrementId='ring-inc'
+      label='Diâmetro do círculo'
+      max='1'
+      min='0'
+      sliderId='ring-slider'
+      value='0'
+    />
+  </div>
+
+  <div class='mt-2 flex items-center justify-between gap-4'>
+    <Button variant='link' id='btn-recalibrate-from-step2'>
+      &lsaquo; Recalibrar cartão
+    </Button>
+    <Button id='btn-see-result'>Ver resultado</Button>
+  </div>
+</section>

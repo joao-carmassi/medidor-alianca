@@ -1,0 +1,51 @@
+---
+import Button from '../ui/Button.astro';
+import SliderControl from '../ui/SliderControl.astro';
+import CardCalibrationStage from './CardCalibrationStage.astro';
+import Stepper from './Stepper.astro';
+import {
+  eyebrowClass,
+  instructionClass,
+  panelClass,
+  sectionTitleClass,
+} from '../../lib/uiClasses';
+---
+
+<section
+  class={panelClass}
+  id='panel-step1'
+  data-panel='step1'
+  aria-hidden='true'
+  hidden
+>
+  <Stepper current={1} />
+
+  <p class={eyebrowClass}>Passo I</p>
+  <h2 class={sectionTitleClass}>Calibre com um cartão</h2>
+  <p class={instructionClass}>
+    Encoste um cartão de crédito na tela e ajuste o retângulo abaixo até ele
+    ficar exatamente do mesmo tamanho — alinhe um dos cantos do cartão real com
+    o canto marcado em dourado.
+  </p>
+
+  <CardCalibrationStage />
+
+  <div id='card-control'>
+    <SliderControl
+      decrementId='card-dec'
+      incrementId='card-inc'
+      label='Tamanho do cartão'
+      max='600'
+      min='120'
+      readoutId='card-px-readout'
+      readoutValue='320 px'
+      sliderId='card-slider'
+      value='320'
+    />
+  </div>
+
+  <div class='mt-2 flex items-center justify-between gap-4'>
+    <Button variant='link' id='btn-back-to-hero'>&lsaquo; Voltar</Button>
+    <Button id='btn-calibrate-done'>Pronto, está do tamanho</Button>
+  </div>
+</section>

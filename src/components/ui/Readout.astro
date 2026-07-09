@@ -1,0 +1,22 @@
+---
+import { readoutClasses } from '../../lib/uiClasses';
+
+interface Props {
+  accent?: boolean;
+  id: string;
+  label: string;
+  value: string;
+}
+
+const { accent = false, id, label, value } = Astro.props;
+---
+
+<div class={accent ? readoutClasses.accent : readoutClasses.base}>
+  <span class={readoutClasses.label}>{label}</span>
+  <span
+    class={`${readoutClasses.value} ${accent ? 'text-[#f3dfa4]' : ''}`.trim()}
+    id={id}
+  >
+    {value}
+  </span>
+</div>

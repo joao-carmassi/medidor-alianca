@@ -1,0 +1,14 @@
+---
+import { formClasses } from '../../lib/uiClasses';
+
+interface Props {
+  ariaLabel: string;
+  id: string;
+}
+
+const { ariaLabel, id } = Astro.props;
+---
+
+<button class={formClasses.fineButton} type='button' id={id} aria-label={ariaLabel}>
+  <slot />
+</button>

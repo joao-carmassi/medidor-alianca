@@ -1,116 +1,39 @@
-/* =====================================================================
-   DANIEL CARMASSI — Medidor de Alianca
-   app.ts — TypeScript module bundled by Astro/Vite.
-   ---------------------------------------------------------------------
-   Flow:
-     hero -> step1 (calibrar cartao) -> step2 (medir alianca) -> result
-   Calibration (px per mm) is persisted in localStorage so returning
-   visitors can skip straight to step 2.
-   ===================================================================== */
+import { ARO_MAX, ARO_MIN, CARD_ASPECT, CARD_WIDTH_MM } from './constants';
+import { getDomElements } from './dom';
+import { aroToDiameterMM, clamp, diameterMMToAro, formatMM } from './math';
+import { loadPxPorMM, savePxPorMMValue } from './storage';
+import type { AppState, PanelName } from './types';
 
-type PanelName = 'hero' | 'step1' | 'step2' | 'result';
-
-type AppState = {
-  pxPorMM: number | null;
-  lastAro: number;
-  lastDiameterMM: number;
-};
-
-const CARD_WIDTH_MM = 85.6; // ISO/IEC 7810 ID-1 width
-const CARD_HEIGHT_MM = 53.98; // ISO/IEC 7810 ID-1 height
-const CARD_ASPECT = CARD_HEIGHT_MM / CARD_WIDTH_MM; // height / width
-
-const ARO_MIN = 8;
-const ARO_MAX = 34;
-
-const STORAGE_KEY = 'dc_pxPorMM';
-
-function getElement<T extends HTMLElement>(id: string): T {
-  const element = document.getElementById(id);
-
-  if (!element) {
-    throw new Error(`Element #${id} was not found.`);
-  }
-
-  return element as T;
-}
-
-function aroToDiameterMM(aro: number): number {
-  return (aro + 40) / Math.PI;
-}
-
-function diameterMMToAro(diameterMM: number): number {
-  return Math.round(Math.PI * diameterMM - 40);
-}
-
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
-
-function formatMM(value: number): string {
-  return (
-    value.toLocaleString('pt-BR', {
-      minimumFractionDigits: 1,
-      maximumFractionDigits: 1,
-    }) + ' mm'
-  );
-}
-
-function loadPxPorMM(): number | null {
-  let raw: string | null = null;
-
-  try {
-    raw = localStorage.getItem(STORAGE_KEY);
-  } catch {
-    raw = null;
-  }
-
-  const value = raw === null ? Number.NaN : Number.parseFloat(raw);
-  return Number.isFinite(value) && value > 0 ? value : null;
-}
-
-const panels: Record<PanelName, HTMLElement> = {
-  hero: getElement('panel-hero'),
-  step1: getElement('panel-step1'),
-  step2: getElement('panel-step2'),
-  result: getElement('panel-result'),
-};
-
-const heroActionsFresh = getElement('hero-actions-fresh');
-const heroActionsReturning = getElement('hero-actions-returning');
-
-const btnStart = getElement<HTMLButtonElement>('btn-start');
-const btnContinue = getElement<HTMLButtonElement>('btn-continue');
-const btnRecalibrateFromHero = getElement<HTMLButtonElement>(
-  'btn-recalibrate-from-hero',
-);
-
-const cardStageFrame = getElement('card-stage-frame');
-const cardObject = getElement('card-object');
-const cardSlider = getElement<HTMLInputElement>('card-slider');
-const cardDec = getElement<HTMLButtonElement>('card-dec');
-const cardInc = getElement<HTMLButtonElement>('card-inc');
-const cardPxReadout = getElement('card-px-readout');
-const btnBackToHero = getElement<HTMLButtonElement>('btn-back-to-hero');
-const btnCalibrateDone = getElement<HTMLButtonElement>('btn-calibrate-done');
-
-const ringStageFrame = getElement('ring-stage-frame');
-const ringObject = getElement('ring-object');
-const ringLiveAro = getElement('ring-live-aro');
-const ringSlider = getElement<HTMLInputElement>('ring-slider');
-const ringDec = getElement<HTMLButtonElement>('ring-dec');
-const ringInc = getElement<HTMLButtonElement>('ring-inc');
-const diameterReadout = getElement('diameter-readout');
-const aroReadout = getElement('aro-readout');
-const btnRecalibrateFromStep2 = getElement<HTMLButtonElement>(
-  'btn-recalibrate-from-step2',
-);
-const btnSeeResult = getElement<HTMLButtonElement>('btn-see-result');
-
-const resultAro = getElement('result-aro');
-const resultDiameter = getElement('result-diameter');
-const btnWhatsapp = getElement<HTMLAnchorElement>('btn-whatsapp');
-const btnRemeasure = getElement<HTMLButtonElement>('btn-remeasure');
+const {
+  panels,
+  heroActionsFresh,
+  heroActionsReturning,
+  btnStart,
+  btnContinue,
+  btnRecalibrateFromHero,
+  cardStageFrame,
+  cardObject,
+  cardSlider,
+  cardDec,
+  cardInc,
+  cardPxReadout,
+  btnBackToHero,
+  btnCalibrateDone,
+  ringStageFrame,
+  ringObject,
+  ringLiveAro,
+  ringSlider,
+  ringDec,
+  ringInc,
+  diameterReadout,
+  aroReadout,
+  btnRecalibrateFromStep2,
+  btnSeeResult,
+  resultAro,
+  resultDiameter,
+  btnWhatsapp,
+  btnRemeasure,
+} = getDomElements();
 
 const state: AppState = {
   pxPorMM: loadPxPorMM(),
@@ -120,12 +43,7 @@ const state: AppState = {
 
 function savePxPorMM(value: number): void {
   state.pxPorMM = value;
-
-  try {
-    localStorage.setItem(STORAGE_KEY, String(value));
-  } catch {
-    // The app still works for the current session when storage is unavailable.
-  }
+  savePxPorMMValue(value);
 }
 
 function showPanel(name: PanelName): void {
@@ -283,8 +201,7 @@ function stepRingSlider(delta: number): void {
 }
 
 function updateWhatsappLink(): void {
-  const whatsappUrl = '#';
-  btnWhatsapp.href = whatsappUrl;
+  btnWhatsapp.href = '#';
 }
 
 cardSlider.addEventListener('input', () => {
@@ -323,5 +240,3 @@ window.addEventListener('resize', () => {
 
 refreshHeroActions();
 showPanel('hero');
-
-export {};

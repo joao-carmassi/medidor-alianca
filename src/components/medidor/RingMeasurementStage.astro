@@ -1,0 +1,19 @@
+---
+import { displayFont, stageClasses } from '../../lib/uiClasses';
+---
+
+<div class={stageClasses.ring} id='ring-stage-frame'>
+  <div
+    class='relative flex items-center justify-center rounded-full border-2 border-[#f3dfa4] bg-[radial-gradient(circle_at_38%_32%,#f3dfa4,#d4af37_45%,#b8860b_100%)] shadow-[0_20px_46px_-18px_rgba(212,175,55,.45),inset_0_0_22px_rgba(120,80,0,.35)] transition-[width,height] duration-75'
+    id='ring-object'
+    role='img'
+    aria-label='Círculo de medição da aliança'
+  >
+    <span
+      class={`${displayFont} text-2xl font-semibold text-[#1a1305] [text-shadow:0_1px_0_rgba(255,255,255,.25)]`}
+      id='ring-live-aro'
+    >
+      16
+    </span>
+  </div>
+</div>

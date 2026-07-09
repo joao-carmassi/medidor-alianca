@@ -1,0 +1,59 @@
+---
+import FineAdjustButton from './FineAdjustButton.astro';
+import { formClasses } from '../../lib/uiClasses';
+
+interface Props {
+  decrementId: string;
+  incrementId: string;
+  label: string;
+  max: string;
+  min: string;
+  readoutId?: string;
+  readoutValue?: string;
+  sliderId: string;
+  value: string;
+}
+
+const {
+  decrementId,
+  incrementId,
+  label,
+  max,
+  min,
+  readoutId,
+  readoutValue,
+  sliderId,
+  value,
+} = Astro.props;
+---
+
+<div class='mb-2'>
+  <div class='mb-2.5 flex items-baseline justify-between'>
+    <label class={formClasses.label} for={sliderId}>{label}</label>
+    {
+      readoutId && readoutValue ? (
+        <span class='text-[12.5px] tabular-nums text-[#d4af37]' id={readoutId}>
+          {readoutValue}
+        </span>
+      ) : null
+    }
+  </div>
+  <div class={formClasses.row}>
+    <FineAdjustButton id={decrementId} ariaLabel='Diminuir 1 pixel'>
+      &minus;
+    </FineAdjustButton>
+    <input
+      class={formClasses.slider}
+      type='range'
+      id={sliderId}
+      min={min}
+      max={max}
+      step='1'
+      value={value}
+      aria-describedby={readoutId}
+    />
+    <FineAdjustButton id={incrementId} ariaLabel='Aumentar 1 pixel'>
+      &plus;
+    </FineAdjustButton>
+  </div>
+</div>
